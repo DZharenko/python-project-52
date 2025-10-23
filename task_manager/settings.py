@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-development-key')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # DEBUG = True
 
-ALLOWED_HOSTS = ['webserver']
+ALLOWED_HOSTS = ['webserver', 'localhost', '127.0.0.1']
 
 # Добавляем домен Render при деплое
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
