@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import HomeView, UsersView, LoginView, RegisterView
+from .views import HomeView, LoginView, LogoutView, RegisterView  # добавляем LogoutView
 from django.conf.urls.i18n import i18n_patterns
 # from django.http import HttpResponse
 
@@ -31,9 +31,11 @@ urlpatterns = [
 # ⚡ Добавляем поддержку языков через URL
 urlpatterns += i18n_patterns(
     path('', HomeView.as_view(), name='home'),
-    path('users/', UsersView.as_view(), name='users'),
+    path('users/', include('users.urls')),
+    # path('users/', UsersView.as_view(), name='users'),
     path('login/', LoginView.as_view(), name='login'),
-    path('register/', RegisterView.as_view(), name='register'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    # path('register/', RegisterView.as_view(), name='register'),
     prefix_default_language=False,  # Главная страница без префикса языка
 )
 
@@ -49,3 +51,8 @@ urlpatterns += i18n_patterns(
 #     path('login/', LoginView.as_view(), name='login'),
 #     path('register/', RegisterView.as_view(), name='register'),
 # ]
+
+
+
+
+

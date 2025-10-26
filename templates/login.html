@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 {% load i18n %}
-
-{% block page_title %}{% trans "Вход" %}{% endblock %}
+{% load django_bootstrap5 %}
 
 {% block content %}
-<div class="card">
-  <div class="card-body p-5 bg-light">
-    <p class="lead">{% trans "Форма входа будет здесь" %}</p>
-  </div>
+<div class="container wrapper flex-grow-1">
+    <h1 class="my-4">{% trans "Login" %}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">{% trans "Username" %}</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">{% trans "Password" %}</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+    </form>
 </div>
 {% endblock %}

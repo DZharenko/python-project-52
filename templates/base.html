@@ -21,12 +21,24 @@
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">{% trans "Registration" %}</a>
-          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <span class="navbar-text me-3">{{ user.get_full_name }}</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user_update' user.id %}">{% trans "Profile" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user_create' %}">{% trans "Registration" %}</a>
+            </li>
+          {% endif %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
               {% get_current_language as LANGUAGE_CODE %}
