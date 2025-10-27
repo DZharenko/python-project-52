@@ -18,9 +18,18 @@
             </div>
             <div class="col">
                 <p><strong>{% trans 'Status' %}:</strong> {{ task.status.name }}</p>
+                <p><strong>{% trans 'Labels' %}:</strong> 
+                    {% for label in task.labels.all %}
+                        <span class="badge bg-secondary">{{ label.name }}</span>
+                    {% empty %}
+                        <span class="text-muted">{% trans 'No labels' %}</span>
+                    {% endfor %}
+                </p>
                 <p><strong>{% trans 'Created at' %}:</strong> {{ task.created_at|date:"d.m.Y H:i" }}</p>
             </div>
-        </div>
+        </div>    
+
+
         <div class="mt-3">
             <a href="{% url 'tasks:task_update' task.pk %}" class="btn btn-primary">{% trans 'Update' %}</a>
             <a href="{% url 'tasks:task_delete' task.pk %}" class="btn btn-danger">{% trans 'Delete' %}</a>

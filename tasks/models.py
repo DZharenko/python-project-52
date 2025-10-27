@@ -11,10 +11,12 @@ class Task(models.Model):
         _('Name'),
         max_length=100,
         blank=False
+        # УБИРАЕМ help_text
     )
     description = models.TextField(
         _('Description'),
         blank=True
+        # УБИРАЕМ help_text
     )
     status = models.ForeignKey(
         Status,
@@ -35,6 +37,12 @@ class Task(models.Model):
         verbose_name=_('Executor'),
         blank=True,
         null=True
+    )
+    labels = models.ManyToManyField(
+        'labels.Label',
+        related_name='tasks',
+        verbose_name=_('Labels'),
+        blank=True
     )
     created_at = models.DateTimeField(
         _('Created at'),

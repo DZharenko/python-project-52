@@ -14,35 +14,39 @@
             <th>{% trans 'Status' %}</th>
             <th>{% trans 'Author' %}</th>
             <th>{% trans 'Executor' %}</th>
+            <th>{% trans 'Labels' %}</th> 
             <th>{% trans 'Created at' %}</th>
             <th>{% trans 'Actions' %}</th>
         </tr>
     </thead>
-    <tbody>
-        {% for task in tasks %}
-        <tr>
-            <td>{{ task.id }}</td>
-    <td><a href="{% url 'tasks:task_detail' task.pk %}">{{ task.name }}</a></td>
-            <td>{{ task.status.name }}</td>
-            <td>{{ task.author.get_full_name }}</td>
-            <td>
-                {% if task.executor %}
-                    {{ task.executor.get_full_name }}
-                {% else %}
-                    <span class="text-muted">{% trans 'Not assigned' %}</span>
-                {% endif %}
-            </td>
-            <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
-            <td>
-                <a href="{% url 'tasks:task_update' task.pk %}" class="btn btn-primary btn-sm">{% trans 'Update' %}</a>
-                <a href="{% url 'tasks:task_delete' task.pk %}" class="btn btn-danger btn-sm">{% trans 'Delete' %}</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="7" class="text-center">{% trans 'No tasks found' %}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+   <tbody>
+    {% for task in tasks %}
+    <tr>
+        <td>{{ task.id }}</td>
+        <td><a href="{% url 'tasks:task_detail' task.pk %}">{{ task.name }}</a></td>
+        <td>{{ task.status.name }}</td>
+        <td>{{ task.author.get_full_name }}</td>
+        <td>
+            {% if task.executor %}
+                {{ task.executor.get_full_name }}
+            {% else %}
+                <span class="text-muted">{% trans 'Not assigned' %}</span>
+            {% endif %}
+        </td>
+        <td>
+            {% for label in task.labels.all %}
+                <span class="badge bg-secondary">{{ label.name }}</span>
+            {% empty %}
+                <span class="text-muted">—</span>
+            {% endfor %}
+        </td>
+        <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
+        <td>
+            <a href="{% url 'tasks:task_update' task.pk %}" class="btn btn-primary btn-sm">{% trans 'Update' %}</a>
+            <a href="{% url 'tasks:task_delete' task.pk %}" class="btn btn-danger btn-sm">{% trans 'Delete' %}</a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
 </table>
 {% endblock %}

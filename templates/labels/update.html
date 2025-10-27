@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<h1 class="my-4">{% trans 'Update label' %}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">{% trans 'Update' %}</button>
+        <a href="{% url 'labels:labels' %}" class="btn btn-outline-secondary">{% trans 'Cancel' %}</a>
+    </div>
+</form>
+{% endblock %}

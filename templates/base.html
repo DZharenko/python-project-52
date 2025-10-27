@@ -25,6 +25,10 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'statuses:statuses' %}">{% trans "Statuses" %}</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'labels:labels' %}">{% trans 'Labels' %}</a>
+          </li>
+
         </ul>
         <ul class="navbar-nav ms-auto">
           {% if user.is_authenticated %}
