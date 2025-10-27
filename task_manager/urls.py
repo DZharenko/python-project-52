@@ -18,13 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import HomeView, LoginView, LogoutView, RegisterView  # добавляем LogoutView
 from django.conf.urls.i18n import i18n_patterns
-from django.http import HttpResponseServerError
 # from django.http import HttpResponse
-
-def activate_rollbar(request):
-    # Создаем intentional ошибку для активации Rollbar
-    raise Exception("Rollbar activation test - please ignore")
-    return HttpResponseServerError("Error")
 
 
 # def home(request):
