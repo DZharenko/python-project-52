@@ -10,11 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
-import rollbar
 from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
-from django.utils.translation import gettext_lazy as _
 
 # Загружаем .env файл
 load_dotenv()

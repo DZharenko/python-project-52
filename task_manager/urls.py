@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import HomeView, LoginView, LogoutView, RegisterView  # добавляем LogoutView
+from .views import HomeView, LoginView, LogoutView  # добавляем LogoutView
 from django.conf.urls.i18n import i18n_patterns
 # from django.http import HttpResponse
 

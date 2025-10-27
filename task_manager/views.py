@@ -1,11 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-from django.http import HttpResponse
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
