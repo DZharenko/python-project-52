@@ -18,7 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import HomeView, LoginView, LogoutView, RegisterView  # добавляем LogoutView
 from django.conf.urls.i18n import i18n_patterns
+from django.http import HttpResponseServerError
 # from django.http import HttpResponse
+
+def activate_rollbar(request):
+    # Создаем intentional ошибку для активации Rollbar
+    raise Exception("Rollbar activation test - please ignore")
+    return HttpResponseServerError("Error")
+
 
 # def home(request):
     # return HttpResponse("Добро пожаловать в Менеджер задач!")
@@ -38,6 +45,7 @@ urlpatterns += i18n_patterns(
     path('labels/', include('labels.urls')),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('activate-rollbar/', activate_rollbar),
     # path('register/', RegisterView.as_view(), name='register'),
     # prefix_default_language=False,  # Главная страница без префикса языка
 )
