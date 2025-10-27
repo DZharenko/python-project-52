@@ -39,7 +39,7 @@ urlpatterns += i18n_patterns(
     path('labels/', include('labels.urls')),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('activate-rollbar/', activate_rollbar),
+    # path('activate-rollbar/', activate_rollbar),
     # path('register/', RegisterView.as_view(), name='register'),
     # prefix_default_language=False,  # Главная страница без префикса языка
 )
