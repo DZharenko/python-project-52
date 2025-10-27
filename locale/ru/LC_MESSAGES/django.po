@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-27 13:57+0000\n"
+"POT-Creation-Date: 2025-10-27 17:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,21 +19,24 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: statuses/forms.py:11 statuses/models.py:7 templates/statuses/index.html:16
+#: statuses/forms.py:11 statuses/models.py:7 tasks/forms.py:15
+#: tasks/models.py:11 templates/statuses/index.html:16
+#: templates/tasks/index.html:13
 msgid "Name"
 msgstr "Имя"
 
-#: statuses/models.py:13 templates/statuses/index.html:17
+#: statuses/models.py:13 tasks/models.py:40 templates/statuses/index.html:17
+#: templates/tasks/detail.html:21 templates/tasks/index.html:17
 #: templates/users/index.html:14
 msgid "Created at"
 msgstr "Дата создания"
 
-#: statuses/models.py:21
-#| msgid "Statuses"
+#: statuses/models.py:21 tasks/forms.py:17 tasks/models.py:23
+#: templates/tasks/detail.html:20 templates/tasks/index.html:14
 msgid "Status"
 msgstr "Статус"
 
-#: statuses/models.py:22 templates/base.html:23 templates/statuses/index.html:6
+#: statuses/models.py:22 templates/base.html:26 templates/statuses/index.html:6
 msgid "Statuses"
 msgstr "Статусы"
 
@@ -65,6 +68,48 @@ msgstr "Введит корректное имя пользователя и п�
 msgid "You are logged out"
 msgstr "Вы вышли из системы"
 
+#: tasks/forms.py:16 tasks/models.py:16
+#| msgid "Registration"
+msgid "Description"
+msgstr "Описание"
+
+#: tasks/forms.py:18 tasks/models.py:35 templates/tasks/detail.html:17
+#: templates/tasks/index.html:16
+msgid "Executor"
+msgstr "Исполнитель"
+
+#: tasks/models.py:29 templates/tasks/detail.html:16
+#: templates/tasks/index.html:15
+msgid "Author"
+msgstr "Автор"
+
+#: tasks/models.py:48
+msgid "Task"
+msgstr "Задачи"
+
+#: tasks/models.py:49 templates/base.html:23 templates/tasks/index.html:6
+msgid "Tasks"
+msgstr "Задачи"
+
+#: tasks/views.py:37
+#| msgid "Status successfully created"
+msgid "Task successfully created"
+msgstr "Статус успешно создан"
+
+#: tasks/views.py:49
+#| msgid "Status successfully updated"
+msgid "Task successfully updated"
+msgstr "Статус успешно обновлен"
+
+#: tasks/views.py:56
+#| msgid "Status successfully deleted"
+msgid "Task successfully deleted"
+msgstr "Задача удалена"
+
+#: tasks/views.py:63
+msgid "A task can only be deleted by its author"
+msgstr "Задача может быть удалена только автором"
+
 #: templates/base.html:6
 msgid "Task Manager Hexlet"
 msgstr "Менеджер задач Hexlet"
@@ -77,19 +122,19 @@ msgstr "Менеджер задач"
 msgid "Users"
 msgstr "Пользователи"
 
-#: templates/base.html:32
+#: templates/base.html:35
 msgid "Profile"
 msgstr "Профиль"
 
-#: templates/base.html:35
+#: templates/base.html:38
 msgid "Logout"
 msgstr "Выход"
 
-#: templates/base.html:39 templates/login.html:7 templates/login.html:19
+#: templates/base.html:42 templates/login.html:7 templates/login.html:19
 msgid "Login"
 msgstr "Вход"
 
-#: templates/base.html:42 templates/users/create.html:7
+#: templates/base.html:45 templates/users/create.html:7
 msgid "Registration"
 msgstr "Регистрация"
 
@@ -107,7 +152,6 @@ msgstr "Узнать больше"
 
 #: templates/login.html:12 templates/users/index.html:12 users/forms.py:14
 #: users/forms.py:27 users/forms.py:35
-#| msgid "Users"
 msgid "Username"
 msgstr "Пользователь"
 
@@ -127,7 +171,7 @@ msgstr ""
 msgid "Create status"
 msgstr "Создать статус"
 
-#: templates/statuses/create.html:12
+#: templates/statuses/create.html:12 templates/tasks/create.html:11
 msgid "Create"
 msgstr "Создать"
 
@@ -135,19 +179,23 @@ msgstr "Создать"
 msgid "Delete status"
 msgstr "Удалить статус"
 
-#: templates/statuses/delete.html:8 templates/users/delete.html:8
+#: templates/statuses/delete.html:8 templates/tasks/delete.html:7
+#: templates/users/delete.html:8
 msgid "Are you sure you want to delete"
 msgstr "Вы действительно хотите удалить?"
 
-#: templates/statuses/delete.html:12 templates/users/delete.html:12
+#: templates/statuses/delete.html:12 templates/tasks/delete.html:11
+#: templates/users/delete.html:12
 msgid "Yes, delete"
 msgstr "Да, удалить"
 
-#: templates/statuses/delete.html:13 templates/users/delete.html:13
+#: templates/statuses/delete.html:13 templates/tasks/delete.html:12
+#: templates/users/delete.html:13
 msgid "Cancel"
 msgstr "Отмена"
 
-#: templates/statuses/index.html:18 templates/users/index.html:15
+#: templates/statuses/index.html:18 templates/tasks/index.html:18
+#: templates/users/index.html:15
 msgid "Actions"
 msgstr "Действия"
 
@@ -155,7 +203,8 @@ msgstr "Действия"
 msgid "Edit"
 msgstr "Редактировать"
 
-#: templates/statuses/index.html:32 templates/users/index.html:30
+#: templates/statuses/index.html:32 templates/tasks/detail.html:26
+#: templates/tasks/index.html:33 templates/users/index.html:30
 msgid "Delete"
 msgstr "Удалить"
 
@@ -163,9 +212,38 @@ msgstr "Удалить"
 msgid "Update status"
 msgstr "Обновить статус"
 
-#: templates/statuses/update.html:12 templates/users/update.html:12
+#: templates/statuses/update.html:12 templates/tasks/detail.html:25
+#: templates/tasks/index.html:31 templates/tasks/update.html:11
+#: templates/users/update.html:12
 msgid "Update"
 msgstr "Обновить"
+
+#: templates/tasks/create.html:6 templates/tasks/index.html:7
+#| msgid "Create status"
+msgid "Create task"
+msgstr "Создать задачу"
+
+#: templates/tasks/delete.html:5
+#| msgid "Delete status"
+msgid "Delete task"
+msgstr "Удалить статус"
+
+#: templates/tasks/detail.html:5
+msgid "Task view"
+msgstr "Просмотр задачи"
+
+#: templates/tasks/detail.html:27
+msgid "Back to tasks list"
+msgstr "Назад к листу задач"
+
+#: templates/tasks/index.html:38
+msgid "No tasks found"
+msgstr "Задачи не найдены"
+
+#: templates/tasks/update.html:6
+#| msgid "Update status"
+msgid "Update task"
+msgstr "Обновить статус"
 
 #: templates/users.html:4
 msgid "Пользователи"
@@ -176,7 +254,6 @@ msgid "Список пользователей будет здесь"
 msgstr ""
 
 #: templates/users/create.html:12
-#| msgid "Registration"
 msgid "Register"
 msgstr "Регистрация"
 

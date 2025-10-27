@@ -50,7 +50,7 @@ class UserDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
             return redirect('users')
         return super().dispatch(request, *args, **kwargs)
     
-    def form_valid(self, form):
-        messages.success(self.request, self.success_message)
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     messages.success(self.request, self.success_message)
+    #     return super().form_valid(form)
 

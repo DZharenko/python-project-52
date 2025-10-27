@@ -34,6 +34,7 @@ urlpatterns += i18n_patterns(
     path('users/', include('users.urls')),
     # path('users/', UsersView.as_view(), name='users'),
     path('statuses/', include('statuses.urls')),
+    path('tasks/', include('tasks.urls')),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     # path('register/', RegisterView.as_view(), name='register'),

@@ -42,7 +42,7 @@ class StatusDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     def form_valid(self, form):
         try:
             response = super().form_valid(form)
-            messages.success(self.request, self.success_message)
+            # messages.success(self.request, self.success_message)
             return response
         except models.ProtectedError:
             messages.error(
