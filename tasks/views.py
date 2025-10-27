@@ -6,18 +6,27 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django_filters.views import FilterView
 from .models import Task
 from .forms import TaskForm
+from .filters import TaskFilter  # НОВЫЙ ИМПОРТ
 
 
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, FilterView):  # Меняем на FilterView
     model = Task
     template_name = 'tasks/index.html'
     context_object_name = 'tasks'
+    filterset_class = TaskFilter  # Добавляем фильтр
     ordering = ['created_at']
 
     def get_queryset(self):
         return Task.objects.select_related('author', 'executor', 'status')
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        if kwargs['data'] is None:
+            kwargs['data'] = {}
+        return kwargs
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):

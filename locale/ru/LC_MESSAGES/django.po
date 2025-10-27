@@ -395,3 +395,11 @@ msgstr "Пользователь удален"
 #: users/views.py:49
 msgid "You do not have permission to delete this user"
 msgstr "У вас нет прав для удаления"
+
+#: tasks/filters.py:35
+msgid "Only my tasks"
+msgstr "Только свои задачи"
+
+#: templates/tasks/index.html:38
+msgid "Show"
+msgstr "Показать"

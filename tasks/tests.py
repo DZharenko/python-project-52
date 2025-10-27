@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from .models import Task
 from statuses.models import Status
+from labels.models import Label  # НОВЫЙ ИМПОРТ
 
 User = get_user_model()
 
@@ -216,3 +217,143 @@ class TaskIntegrationTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Task.objects.filter(pk=task.pk).exists())
+
+
+# НОВЫЕ ТЕСТЫ ДЛЯ ФИЛЬТРАЦИИ
+class TaskFilterTest(TestCase):
+    def setUp(self):
+        # Создаем пользователей
+        self.user1 = User.objects.create_user(
+            username='user1',
+            password='password123',
+            first_name='John',
+            last_name='Doe'
+        )
+        self.user2 = User.objects.create_user(
+            username='user2',
+            password='password123',
+            first_name='Jane',
+            last_name='Smith'
+        )
+        
+        # Создаем статусы
+        self.status_new = Status.objects.create(name='New')
+        self.status_in_progress = Status.objects.create(name='In Progress')
+        
+        # Создаем метки
+        self.label_bug = Label.objects.create(name='Bug')
+        self.label_feature = Label.objects.create(name='Feature')
+        
+        # Создаем задачи
+        self.task1 = Task.objects.create(
+            name='Task 1',
+            description='Description 1',
+            status=self.status_new,
+            author=self.user1,
+            executor=self.user2
+        )
+        self.task1.labels.add(self.label_bug)
+        
+        self.task2 = Task.objects.create(
+            name='Task 2',
+            description='Description 2',
+            status=self.status_in_progress,
+            author=self.user2,
+            executor=self.user1
+        )
+        self.task2.labels.add(self.label_feature)
+        
+        self.task3 = Task.objects.create(
+            name='Task 3',
+            description='Description 3',
+            status=self.status_new,
+            author=self.user1,
+            executor=None
+        )
+        self.task3.labels.add(self.label_bug, self.label_feature)
+
+    def test_filter_by_status(self):
+        """Тест фильтрации по статусу"""
+        self.client.login(username='user1', password='password123')
+        
+        # Фильтруем по статусу "New"
+        response = self.client.get(reverse('tasks:tasks') + '?status=' + str(self.status_new.id))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Task 1')
+        self.assertContains(response, 'Task 3')
+        self.assertNotContains(response, 'Task 2')
+
+    def test_filter_by_executor(self):
+        """Тест фильтрации по исполнителю"""
+        self.client.login(username='user1', password='password123')
+        
+        # Фильтруем по исполнителю user2
+        response = self.client.get(reverse('tasks:tasks') + '?executor=' + str(self.user2.id))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Task 1')
+        self.assertNotContains(response, 'Task 2')
+        self.assertNotContains(response, 'Task 3')
+
+    def test_filter_by_label(self):
+        """Тест фильтрации по метке"""
+        self.client.login(username='user1', password='password123')
+        
+        # Фильтруем по метке "Bug"
+        response = self.client.get(reverse('tasks:tasks') + '?labels=' + str(self.label_bug.id))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Task 1')
+        self.assertNotContains(response, 'Task 2')
+        self.assertContains(response, 'Task 3')
+
+    def test_filter_self_tasks(self):
+        """Тест фильтрации только своих задач"""
+        self.client.login(username='user1', password='password123')
+        
+        # Фильтруем только свои задачи
+        response = self.client.get(reverse('tasks:tasks') + '?self_tasks=on')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Task 1')
+        self.assertNotContains(response, 'Task 2')
+        self.assertContains(response, 'Task 3')
+
+    def test_combined_filter(self):
+        """Тест комбинированной фильтрации"""
+        self.client.login(username='user1', password='password123')
+        
+        # Фильтруем по статусу "New" и метке "Bug"
+        url = reverse('tasks:tasks') + f'?status={self.status_new.id}&labels={self.label_bug.id}'
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Task 1')
+        self.assertContains(response, 'Task 3')
+        self.assertNotContains(response, 'Task 2')
+
+    def test_empty_filter_results(self):
+        """Тест пустых результатов фильтрации"""
+        self.client.login(username='user1', password='password123')
+        
+        # Фильтруем по несуществующему статусу
+        response = self.client.get(reverse('tasks:tasks') + '?status=999')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, _('No tasks found'))
+
+    def test_filter_form_displayed(self):
+        """Тест что форма фильтрации отображается"""
+        self.client.login(username='user1', password='password123')
+        
+        response = self.client.get(reverse('tasks:tasks'))
+        
+        self.assertEqual(response.status_code, 200)
+        # Проверяем что элементы формы фильтрации присутствуют по ID полей
+        self.assertContains(response, 'id_status')
+        self.assertContains(response, 'id_executor')
+        self.assertContains(response, 'id_labels')
+        self.assertContains(response, 'id_self_tasks')
+        # Проверяем кнопку отправки формы
+        self.assertContains(response, 'btn-primary')
