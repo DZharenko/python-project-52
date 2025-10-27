@@ -37,7 +37,7 @@ urlpatterns += i18n_patterns(
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     # path('register/', RegisterView.as_view(), name='register'),
-    prefix_default_language=False,  # Главная страница без префикса языка
+    # prefix_default_language=False,  # Главная страница без префикса языка
 )
 
 

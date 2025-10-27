@@ -60,12 +60,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'task_manager.urls'
@@ -125,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru' 
+LANGUAGE_CODE = 'ru' 
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
@@ -133,12 +134,12 @@ USE_TZ = True
 
 
 LANGUAGES = [
-    ('en', _('English')),
-    ('ru', _('Russian')),
+    ('ru', 'Russian'),
+    ('en', 'English'),
 ]
 
 LOCALE_PATHS = [
-    BASE_DIR / 'locale',
+    os.path.join(BASE_DIR, 'locale'),
 ]
 
 
