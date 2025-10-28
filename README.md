@@ -1,6 +1,8 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/DZharenko/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/DZharenko/python-project-52/actions)
 [![Python CI](https://github.com/DZharenko/python-project-52/actions/workflows/pyci.yaml/badge.svg)](https://github.com/DZharenko/python-project-52/actions/workflows/pyci.yaml)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DZharenko_python-project-52&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=DZharenko_python-project-52)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DZharenko_python-project-52&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DZharenko_python-project-52)
 
 # Task manager
 Web service on Django for create, track, and manage tasks with statuses and labels.
