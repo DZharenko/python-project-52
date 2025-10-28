@@ -10,7 +10,6 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from .forms import StatusForm
 from .models import Status
 
-
 STATUSES_URL = reverse_lazy('statuses:statuses')
 
 class StatusListView(LoginRequiredMixin, ListView):
