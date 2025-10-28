@@ -26,15 +26,14 @@ jobs:
 
     - name: Run tests with coverage
       env:
-        SECRET_KEY: test-key-for-sonar-123
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Используем secret
         DEBUG: "False"
       run: |
-        # Используем SQLite для тестов - быстро и просто
-        uv run coverage run --source=. --omit="*/migrations/*,*/tests/*,*/__pycache__/*" manage.py test
+        uv run coverage run --source=. --omit="*/migrations/*,*/__pycache__/*" manage.py test
         uv run coverage xml
 
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
+      uses: SonarSource/sonarqube-scan-action@v5.0.0  # Обновили на новую версию
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Токен из SonarCloud
