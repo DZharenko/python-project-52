@@ -11,6 +11,8 @@ from .forms import StatusForm
 from .models import Status
 
 
+STATUSES_URL = reverse_lazy('statuses:statuses')
+
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status
     template_name = 'statuses/index.html'
@@ -22,7 +24,7 @@ class StatusCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Status
     form_class = StatusForm
     template_name = 'statuses/create.html'
-    success_url = reverse_lazy('statuses:statuses')  
+    success_url = STATUSES_URL
     success_message = _('Status successfully created')
 
 
@@ -30,14 +32,14 @@ class StatusUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Status
     form_class = StatusForm
     template_name = 'statuses/update.html'
-    success_url = reverse_lazy('statuses:statuses')  
+    success_url = STATUSES_URL 
     success_message = _('Status successfully updated')
 
 
 class StatusDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Status
     template_name = 'statuses/delete.html'
-    success_url = reverse_lazy('statuses:statuses')  
+    success_url = STATUSES_URL
     success_message = _('Status successfully deleted')
 
     def form_valid(self, form):
@@ -49,4 +51,4 @@ class StatusDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
                 self.request,
                 _('Cannot delete status because it is in use')
             )
-            return redirect('statuses:statuses') 
+            return redirect(STATUSES_URL) 

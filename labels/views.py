@@ -6,10 +6,10 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-
 from .forms import LabelForm
 from .models import Label
 
+LABELS_URL = reverse_lazy('labels:labels')
 
 class LabelListView(LoginRequiredMixin, ListView):
     model = Label
@@ -22,7 +22,7 @@ class LabelCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Label
     form_class = LabelForm
     template_name = 'labels/create.html'
-    success_url = reverse_lazy('labels:labels')
+    success_url = LABELS_URL
     success_message = _('Label successfully created')
 
 
@@ -30,14 +30,14 @@ class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Label
     form_class = LabelForm
     template_name = 'labels/update.html'
-    success_url = reverse_lazy('labels:labels')
+    success_url = LABELS_URL
     success_message = _('Label successfully updated')
 
 
 class LabelDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Label
     template_name = 'labels/delete.html'
-    success_url = reverse_lazy('labels:labels')
+    success_url = LABELS_URL
     success_message = _('Label successfully deleted')
 
     def form_valid(self, form):
@@ -48,4 +48,4 @@ class LabelDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
                 self.request,
                 _('Cannot delete label because it is in use')
             )
-            return redirect('labels:labels')
+            return redirect(LABELS_URL)
