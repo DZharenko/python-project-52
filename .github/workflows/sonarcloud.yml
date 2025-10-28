@@ -31,11 +31,8 @@ jobs:
         # Примените миграции
         python manage.py migrate
         
-        # Запустите тесты через pytest
-        python -m pytest
-        
-        # Или через coverage + pytest
-        coverage run -m pytest
+        # Простой запуск тестов через Django
+        coverage run --source=. manage.py test
         coverage xml
 
 
