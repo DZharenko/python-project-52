@@ -28,8 +28,16 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        coverage run --source=. --omit="*/migrations/*,*/tests/*,*/settings.py,*/manage.py" -m pytest
+        # Примените миграции
+        python manage.py migrate
+        
+        # Запустите тесты через pytest
+        python -m pytest
+        
+        # Или через coverage + pytest
+        coverage run -m pytest
         coverage xml
+
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
