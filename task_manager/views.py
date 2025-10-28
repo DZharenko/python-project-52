@@ -1,18 +1,13 @@
-from django.shortcuts import render, redirect
-from django.views import View
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
+from django.views import View
+
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'home.html')
-
-
-# class UsersView(View):
-#     def get(self, request, *args, **kwargs):
-#         # Здесь позже добавим логику для отображения пользователей
-#         return render(request, 'users.html')
 
 
 class LoginView(View):
@@ -40,8 +35,8 @@ class LogoutView(View):
         messages.info(request, _('You are logged out'))
         return redirect('home')
 
+
 class RegisterView(View):
     def get(self, request, *args, **kwargs):
-        # Здесь позже добавим форму регистрации
         return render(request, 'register.html')
     

@@ -1,6 +1,6 @@
-from django.test import TestCase, Client
-from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.test import Client, TestCase
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -64,7 +64,7 @@ class UserCRUDTest(TestCase):
         self.assertFalse(User.objects.filter(username='newuser').exists())
 
     def test_user_update_view_get_authenticated(self):
-        """Тест отображения формы редактирования для авторизованного пользователя (GET)"""
+        """Тест отображения формы редактирования для авторизованного пользователя"""
         self.client.force_login(self.user)
         response = self.client.get(reverse('user_update', args=[self.user.id]))
         

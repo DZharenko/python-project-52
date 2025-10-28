@@ -14,50 +14,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from .views import HomeView, LoginView, LogoutView  # добавляем LogoutView
 from django.conf.urls.i18n import i18n_patterns
-# from django.http import HttpResponse
+from django.contrib import admin
+from django.urls import include, path
 
-
-# def home(request):
-    # return HttpResponse("Добро пожаловать в Менеджер задач!")
+from .views import HomeView, LoginView, LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
-# ⚡ Добавляем поддержку языков через URL
 urlpatterns += i18n_patterns(
     path('', HomeView.as_view(), name='home'),
     path('users/', include('users.urls')),
-    # path('users/', UsersView.as_view(), name='users'),
     path('statuses/', include('statuses.urls')),
     path('tasks/', include('tasks.urls')),
     path('labels/', include('labels.urls')),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    # path('activate-rollbar/', activate_rollbar),
-    # path('register/', RegisterView.as_view(), name='register'),
-    # prefix_default_language=False,  # Главная страница без префикса языка
 )
-
-
-
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#      path('i18n/', include('django.conf.urls.i18n')),  # ⚡ ДОБАВЬТЕ ЭТУ СТРОКУ
-#     # path('', home),
-#     path('', HomeView.as_view(), name='home'),
-#     path('users/', UsersView.as_view(), name='users'),
-#     path('login/', LoginView.as_view(), name='login'),
-#     path('register/', RegisterView.as_view(), name='register'),
-# ]
-
-
-
-
-

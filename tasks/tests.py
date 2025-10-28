@@ -1,10 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-from .models import Task
+
+from labels.models import Label
 from statuses.models import Status
-from labels.models import Label  # НОВЫЙ ИМПОРТ
+
+from .models import Task
 
 User = get_user_model()
 
@@ -49,14 +51,12 @@ class TaskCRUDTest(TestCase):
     def test_task_creation_requires_login(self):
         """Тест что создание задачи требует авторизации"""
         response = self.client.get(reverse('tasks:task_create'))
-        # Проверяем редирект на страницу логина
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
     def test_task_list_requires_login(self):
         """Тест что список задач требует авторизации"""
         response = self.client.get(reverse('tasks:tasks'))
-        # Проверяем редирект на страницу логина
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
@@ -71,7 +71,6 @@ class TaskCRUDTest(TestCase):
         response = self.client.get(
             reverse('tasks:task_detail', kwargs={'pk': task.pk})
         )
-        # Проверяем редирект на страницу логина
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
@@ -86,7 +85,6 @@ class TaskCRUDTest(TestCase):
         response = self.client.get(
             reverse('tasks:task_update', kwargs={'pk': task.pk})
         )
-        # Проверяем редирект на страницу логина
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
@@ -99,16 +97,13 @@ class TaskCRUDTest(TestCase):
             author=self.user1
         )
         
-        # Пользователь user2 пытается удалить задачу
         self.client.login(username='user2', password='password123')
         response = self.client.post(
             reverse('tasks:task_delete', kwargs={'pk': task.pk})
         )
-        # Должен быть редирект с сообщением об ошибке
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Task.objects.filter(pk=task.pk).exists())
         
-        # Автор удаляет задачу
         self.client.login(username='user1', password='password123')
         response = self.client.post(
             reverse('tasks:task_delete', kwargs={'pk': task.pk})
@@ -175,10 +170,8 @@ class TaskIntegrationTest(TestCase):
 
     def test_full_task_lifecycle(self):
         """Полный цикл: создание -> просмотр -> редактирование -> удаление"""
-        # Логинимся
         self.client.login(username='testuser', password='testpass123')
         
-        # 1. Создаем задачу
         response = self.client.post(
             reverse('tasks:task_create'),
             data=self.task_data
@@ -186,18 +179,15 @@ class TaskIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 302)
         task = Task.objects.get(name='Integration Test Task')
         
-        # 2. Проверяем что задача в списке
         response = self.client.get(reverse('tasks:tasks'))
         self.assertContains(response, 'Integration Test Task')
         
-        # 3. Просматриваем задачу
         response = self.client.get(
             reverse('tasks:task_detail', kwargs={'pk': task.pk})
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Integration Test Task')
         
-        # 4. Редактируем задачу
         update_data = {
             'name': 'Updated Task Name',
             'description': 'Updated description',
@@ -211,7 +201,6 @@ class TaskIntegrationTest(TestCase):
         task.refresh_from_db()
         self.assertEqual(task.name, 'Updated Task Name')
         
-        # 5. Удаляем задачу
         response = self.client.post(
             reverse('tasks:task_delete', kwargs={'pk': task.pk})
         )
@@ -219,10 +208,8 @@ class TaskIntegrationTest(TestCase):
         self.assertFalse(Task.objects.filter(pk=task.pk).exists())
 
 
-# НОВЫЕ ТЕСТЫ ДЛЯ ФИЛЬТРАЦИИ
 class TaskFilterTest(TestCase):
     def setUp(self):
-        # Создаем пользователей
         self.user1 = User.objects.create_user(
             username='user1',
             password='password123',
@@ -236,15 +223,12 @@ class TaskFilterTest(TestCase):
             last_name='Smith'
         )
         
-        # Создаем статусы
         self.status_new = Status.objects.create(name='New')
         self.status_in_progress = Status.objects.create(name='In Progress')
         
-        # Создаем метки
         self.label_bug = Label.objects.create(name='Bug')
         self.label_feature = Label.objects.create(name='Feature')
         
-        # Создаем задачи
         self.task1 = Task.objects.create(
             name='Task 1',
             description='Description 1',
@@ -276,8 +260,9 @@ class TaskFilterTest(TestCase):
         """Тест фильтрации по статусу"""
         self.client.login(username='user1', password='password123')
         
-        # Фильтруем по статусу "New"
-        response = self.client.get(reverse('tasks:tasks') + '?status=' + str(self.status_new.id))
+        response = self.client.get(
+            reverse('tasks:tasks') + '?status=' + str(self.status_new.id)
+            )
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Task 1')
@@ -288,8 +273,9 @@ class TaskFilterTest(TestCase):
         """Тест фильтрации по исполнителю"""
         self.client.login(username='user1', password='password123')
         
-        # Фильтруем по исполнителю user2
-        response = self.client.get(reverse('tasks:tasks') + '?executor=' + str(self.user2.id))
+        response = self.client.get(
+            reverse('tasks:tasks') + '?executor=' + str(self.user2.id)
+            )
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Task 1')
@@ -300,8 +286,9 @@ class TaskFilterTest(TestCase):
         """Тест фильтрации по метке"""
         self.client.login(username='user1', password='password123')
         
-        # Фильтруем по метке "Bug"
-        response = self.client.get(reverse('tasks:tasks') + '?labels=' + str(self.label_bug.id))
+        response = self.client.get(
+            reverse('tasks:tasks') + '?labels=' + str(self.label_bug.id)
+            )
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Task 1')
@@ -312,7 +299,6 @@ class TaskFilterTest(TestCase):
         """Тест фильтрации только своих задач"""
         self.client.login(username='user1', password='password123')
         
-        # Фильтруем только свои задачи
         response = self.client.get(reverse('tasks:tasks') + '?self_tasks=on')
         
         self.assertEqual(response.status_code, 200)
@@ -324,8 +310,10 @@ class TaskFilterTest(TestCase):
         """Тест комбинированной фильтрации"""
         self.client.login(username='user1', password='password123')
         
-        # Фильтруем по статусу "New" и метке "Bug"
-        url = reverse('tasks:tasks') + f'?status={self.status_new.id}&labels={self.label_bug.id}'
+        url = (
+            reverse('tasks:tasks') + 
+            f'?status={self.status_new.id}&labels={self.label_bug.id}'
+        )
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, 200)
@@ -337,7 +325,6 @@ class TaskFilterTest(TestCase):
         """Тест пустых результатов фильтрации"""
         self.client.login(username='user1', password='password123')
         
-        # Фильтруем по несуществующему статусу
         response = self.client.get(reverse('tasks:tasks') + '?status=999')
         
         self.assertEqual(response.status_code, 200)
@@ -350,10 +337,8 @@ class TaskFilterTest(TestCase):
         response = self.client.get(reverse('tasks:tasks'))
         
         self.assertEqual(response.status_code, 200)
-        # Проверяем что элементы формы фильтрации присутствуют по ID полей
         self.assertContains(response, 'id_status')
         self.assertContains(response, 'id_executor')
         self.assertContains(response, 'id_labels')
         self.assertContains(response, 'id_self_tasks')
-        # Проверяем кнопку отправки формы
         self.assertContains(response, 'btn-primary')

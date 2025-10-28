@@ -1,6 +1,7 @@
-from django.test import TestCase, Client
-from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.test import Client, TestCase
+from django.urls import reverse
+
 from .models import Status
 
 User = get_user_model()
@@ -24,7 +25,6 @@ class StatusCRUDTest(TestCase):
         response = self.client.get(reverse('statuses:statuses'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses/index.html')
-        # Проверяем наличие формы вместо конкретного текста
         self.assertContains(response, '<table')
 
     def test_status_list_view_unauthenticated(self):
@@ -49,7 +49,9 @@ class StatusCRUDTest(TestCase):
     def test_status_update_view_authenticated(self):
         """Тест обновления статуса для авторизованного пользователя"""
         self.client.force_login(self.user)
-        response = self.client.get(reverse('statuses:status_update', args=[self.status.id]))
+        response = self.client.get(
+            reverse('statuses:status_update', args=[self.status.id])
+            )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses/update.html')
 
@@ -68,7 +70,9 @@ class StatusCRUDTest(TestCase):
     def test_status_delete_view_authenticated(self):
         """Тест удаления статуса для авторизованного пользователя"""
         self.client.force_login(self.user)
-        response = self.client.get(reverse('statuses:status_delete', args=[self.status.id]))
+        response = self.client.get(
+            reverse('statuses:status_delete', args=[self.status.id])
+            )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses/delete.html')
 
@@ -105,7 +109,6 @@ class StatusAccessTest(TestCase):
             response = self.client.get(url)
             self.assertNotEqual(response.status_code, 200)
             
-            # После логина должны быть доступны
             self.client.force_login(self.user)
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)

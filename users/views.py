@@ -4,9 +4,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import User
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
 from .forms import UserCreateForm, UserUpdateForm
+from .models import User
 
 
 class UserListView(ListView):
@@ -50,7 +51,3 @@ class UserDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
             return redirect('users')
         return super().dispatch(request, *args, **kwargs)
     
-    # def form_valid(self, form):
-    #     messages.success(self.request, self.success_message)
-    #     return super().form_valid(form)
-

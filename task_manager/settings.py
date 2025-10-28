@@ -11,19 +11,15 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
+
 import dj_database_url
 from dotenv import load_dotenv
 
-# Загружаем .env файл
 load_dotenv()
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-development-key')
@@ -31,11 +27,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-development-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-# DEBUG = True
 
 ALLOWED_HOSTS = ['webserver', 'localhost', '127.0.0.1']
 
-# Добавляем домен Render при деплое
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -166,11 +160,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # authentification settings
 
-LOGIN_REDIRECT_URL = '/'  # куда перенаправлять после успешного входа
-LOGOUT_REDIRECT_URL = '/'  # куда перенаправлять после выхода
-LOGIN_URL = '/login/'  # URL для входа
+LOGIN_REDIRECT_URL = '/'  
+LOGOUT_REDIRECT_URL = '/'  
+LOGIN_URL = '/login/'  
 
-# Бэкенды аутентификации (уже включены по умолчанию в Django)
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -179,7 +172,7 @@ AUTH_USER_MODEL = 'users.User'
 
 
 ROLLBAR = {
-    'access_token': os.environ.get('ROLLBAR_ACCESS_TOKEN'),  
+    'access_token': os.environ.get('ROLLBAR_ACCESS_TOKEN'), 
     'environment': 'development' if DEBUG else 'production',
     'root': BASE_DIR,
 }

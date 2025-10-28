@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+
 from .models import Label
 
 User = get_user_model()
@@ -78,7 +79,6 @@ class LabelIntegrationTest(TestCase):
         """Полный цикл: создание -> редактирование -> удаление"""
         self.client.login(username='testuser', password='testpass123')
         
-        # 1. Создаем метку
         response = self.client.post(
             reverse('labels:label_create'),
             data={'name': 'Test Label'}
@@ -86,11 +86,9 @@ class LabelIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 302)
         label = Label.objects.get(name='Test Label')
         
-        # 2. Проверяем что метка в списке
         response = self.client.get(reverse('labels:labels'))
         self.assertContains(response, 'Test Label')
         
-        # 3. Редактируем метку
         response = self.client.post(
             reverse('labels:label_update', kwargs={'pk': label.pk}),
             data={'name': 'Updated Label'}
@@ -99,7 +97,6 @@ class LabelIntegrationTest(TestCase):
         label.refresh_from_db()
         self.assertEqual(label.name, 'Updated Label')
         
-        # 4. Удаляем метку
         response = self.client.post(
             reverse('labels:label_delete', kwargs={'pk': label.pk})
         )

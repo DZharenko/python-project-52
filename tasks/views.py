@@ -4,18 +4,19 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from django_filters.views import FilterView
-from .models import Task
+
+from .filters import TaskFilter
 from .forms import TaskForm
-from .filters import TaskFilter  # НОВЫЙ ИМПОРТ
+from .models import Task
 
 
-class TaskListView(LoginRequiredMixin, FilterView):  # Меняем на FilterView
+class TaskListView(LoginRequiredMixin, FilterView):  
     model = Task
     template_name = 'tasks/index.html'
     context_object_name = 'tasks'
-    filterset_class = TaskFilter  # Добавляем фильтр
+    filterset_class = TaskFilter  
     ordering = ['created_at']
 
     def get_queryset(self):
@@ -73,6 +74,3 @@ class TaskDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
             return redirect('tasks:tasks')
         return super().dispatch(request, *args, **kwargs)
 
-    # def form_valid(self, form):
-    #     messages.success(self.request, self.success_message)
-    #     return super().form_valid(form)
