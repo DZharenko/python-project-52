@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from task_manager.statuses.models import Status
+# from task_manager.statuses.models import Status
 
 User = get_user_model()
 
@@ -18,7 +18,7 @@ class Task(models.Model):
         blank=True
     )
     status = models.ForeignKey(
-        Status,
+        'statuses.Status',
         on_delete=models.PROTECT,
         related_name='tasks',
         verbose_name=_('Status')
