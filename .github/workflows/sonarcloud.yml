@@ -40,3 +40,9 @@ jobs:
       with:
         args: >
           -Dsonar.ci.autoconfig.disabled=true
+          sonar.projectKey=DZharenko_python-project-52
+          sonar.organization=dzharenko
+          sonar.projectName=python-project-52
+          sonar.sources=task_manager
+          sonar.python.coverage.reportPaths=coverage.xml
+          sonar.coverage.exclusions=**/migrations/**,**/__pycache__/**
