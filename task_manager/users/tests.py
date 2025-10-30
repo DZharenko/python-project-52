@@ -1,9 +1,9 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
+from django.db.models import ProtectedError
 from django.test import TestCase
 from django.urls import reverse
-from django.db.models import ProtectedError  # ← ДОБАВЬТЕ ЭТОТ ИМПОРТ
 
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
@@ -55,50 +55,23 @@ class UserCRUDTests(TestCase):
                 'first_name': 'Updated',  # NOSONAR
                 'last_name': 'User',  # NOSONAR
                 'email': 'user1@example.com', # NOSONAR 
-                # 'password1': 'newpass123',  # NOSONAR
-                # 'password2': 'newpass123',  # NOSONAR
             }
         )
         self.assertRedirects(response, reverse('users'))
         self.user1.refresh_from_db()
         self.assertEqual(self.user1.first_name, 'Updated')
-        # self.assertTrue(self.user1.check_password('newpass123'))
+       
 
     def test_user_update_unauthenticated(self):
         url = reverse('user_update', kwargs={'pk': self.user1.pk})
         response = self.client.post(url)
 
-        login_url = reverse('login')
-        expected_redirect = f"{login_url}?next={url}"
         self.assertRedirects(response, reverse('users'))
 
         messages = list(get_messages(response.wsgi_request))
         assert "у вас нет прав для редактирования" in str(messages[0]).lower()
 
-    # def test_cannot_delete_user_with_tasks(self):
-    #     status = Status.objects.create(name='В работе')
-
-    #     Task.objects.create(
-    #         name="Test task",
-    #         status=status,
-    #         author=self.user1
-    #     )
-
-    #     self.client.login(username='user1', password='testpass123')  # NOSONAR
-    #     # Сохраняем начальное количество пользователей
-    #     initial_count = User.objects.count()
-    
-    #     # Пытаемся удалить пользователя - должно вызвать ошибку
-    #     try:
-    #         response = self.client.post(reverse('user_delete', args=[self.user1.pk]))
-    #         # Если не было исключения, проверяем что пользователь не удален
-    #         self.assertEqual(User.objects.count(), initial_count)
-    #         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
-    #     except ProtectedError:
-    #         # Ожидаемое исключение - пользователь не должен удаляться
-    #         self.assertEqual(User.objects.count(), initial_count)
-    #         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
-    
+        
     def test_cannot_delete_user_with_tasks(self):
         status = Status.objects.create(name='В работе')
 
@@ -110,16 +83,15 @@ class UserCRUDTests(TestCase):
 
         self.client.login(username='user1', password='testpass123')
         
-        # Сохраняем начальное состояние
-        initial_count = User.objects.count()
-        user_exists_before = User.objects.filter(pk=self.user1.pk).exists()
         
-        # Пытаемся удалить (может вызвать исключение)
+        initial_count = User.objects.count()
+                
+        
         try:
             self.client.post(reverse('user_delete', args=[self.user1.pk]))
         except ProtectedError:
-            pass  # Ожидаемое поведение
+            pass  
         
-        # Проверяем что пользователь все еще существует
+        
         self.assertEqual(User.objects.count(), initial_count)
         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
