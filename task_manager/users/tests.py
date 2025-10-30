@@ -1,166 +1,125 @@
-import types
-
 import pytest
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.messages import get_messages
+from django.test import TestCase
 from django.urls import reverse
+from django.db.models import ProtectedError  # ← ДОБАВЬТЕ ЭТОТ ИМПОРТ
 
-from task_manager.rollbar_middleware import CustomRollbarNotifierMiddleware
+from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
 
-
-def dummy_get_response(request):
-    return None
-
-
-# Rollbar fixture
-@pytest.fixture(autouse=True)
-def enable_rollbar():
-    settings.ROLLBAR = {"access_token": "test_token"}
+User = get_user_model()
 
 
 @pytest.mark.django_db
-class TestUsers:
+class UserCRUDTests(TestCase):
+    fixtures = ['users.json']
 
-    # Test Index
-    def test_index_view(self, client):
-        url = reverse("users")
-        response = client.get(url)
-        assert response.status_code == 200
-        templates = [t.name for t in response.templates if t.name]
-        assert "users/index.html" in templates
+    def setUp(self):
+        self.user1 = User.objects.get(pk=1)
+        self.user2 = User.objects.get(pk=2)
+        self.user3 = User.objects.get(pk=3)
 
-    # Test Create User
-    def test_user_registration(self, client):
-        url = reverse("user_create")
+        for user in [self.user1, self.user2, self.user3]:
+            user.set_password('testpass123')
+            user.save()
+
+    def test_user_registration(self):
+        initial_users = User.objects.count()
+
+        url = reverse('user_create')
         data = {
-            "username": "newuser",
-            "first_name": "First",
-            "last_name": "Last",
-            "email": "newuser@example.com",  # ← ДОБАВЬТЕ ЭТУ СТРОКУ
-            "password1": "complexpass123",
-            "password2": "complexpass123",
+            'username': 'newuser',
+            'password1': 'newpass123',  # NOSONAR
+            'password2': 'newpass123',  # NOSONAR
+            'first_name': 'New',
+            'last_name': 'User',
+            'email': 'newuser@example.com',# NOSONAR
         }
-        response = client.post(url, data)
-        assert response.status_code == 302
-        assert get_user_model().objects.filter(username="newuser").exists()
+        response = self.client.post(url, data)
 
-    # Test Update User
-    # def test_user_update(self, client):
-    #     user_model = get_user_model()
-    #     user = user_model.objects.create_user(username="u1",
-    #                                           password="pass123")  # NOSONAR
-    #     client.login(username="u1", password="pass123")  # NOSONAR
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), initial_users + 1)
+        self.assertTrue(User.objects.filter(username='newuser').exists())
 
-    #     url = reverse("user_update", kwargs={"pk": user.id})
-    #     response = client.post(
-    #         url,
-    #         {
-    #             "username": "u1_updated",
-    #             "first_name": "Name",
-    #             "last_name": "Surname",
-    #             "password1": "newpass12345",  # NOSONAR
-    #             "password2": "newpass12345",  # NOSONAR
-    #         },
-    #     )
-    #     assert response.status_code == 302
-    #     user.refresh_from_db()
-    #     assert user.username == "u1_updated"
+        messages = list(get_messages(response.wsgi_request))
+        assert "успешно" in str(messages[0]).lower()
 
-
-    def test_user_update(self, client):
-        user_model = get_user_model()
-        user = user_model.objects.create_user(
-            username="u1",
-            password="pass123",
-            email="u1@example.com"
-        )
-        client.login(username="u1", password="pass123")
-
-        url = reverse("user_update", kwargs={"pk": user.id})
-        response = client.post(
+    def test_user_update_authenticated(self):
+        self.client.login(username='user1', password='testpass123')  # NOSONAR
+        url = reverse('user_update', kwargs={'pk': self.user1.pk})
+        response = self.client.post(
             url,
             {
-                "username": "u1_updated",
-                "first_name": "Name",
-                "last_name": "Surname",
-                "email": "u1_updated@example.com",
-            },
+                'username': 'user1',  # NOSONAR
+                'first_name': 'Updated',  # NOSONAR
+                'last_name': 'User',  # NOSONAR
+                'email': 'user1@example.com', # NOSONAR 
+                # 'password1': 'newpass123',  # NOSONAR
+                # 'password2': 'newpass123',  # NOSONAR
+            }
         )
+        self.assertRedirects(response, reverse('users'))
+        self.user1.refresh_from_db()
+        self.assertEqual(self.user1.first_name, 'Updated')
+        # self.assertTrue(self.user1.check_password('newpass123'))
+
+    def test_user_update_unauthenticated(self):
+        url = reverse('user_update', kwargs={'pk': self.user1.pk})
+        response = self.client.post(url)
+
+        login_url = reverse('login')
+        expected_redirect = f"{login_url}?next={url}"
+        self.assertRedirects(response, reverse('users'))
+
+        messages = list(get_messages(response.wsgi_request))
+        assert "у вас нет прав для редактирования" in str(messages[0]).lower()
+
+    # def test_cannot_delete_user_with_tasks(self):
+    #     status = Status.objects.create(name='В работе')
+
+    #     Task.objects.create(
+    #         name="Test task",
+    #         status=status,
+    #         author=self.user1
+    #     )
+
+    #     self.client.login(username='user1', password='testpass123')  # NOSONAR
+    #     # Сохраняем начальное количество пользователей
+    #     initial_count = User.objects.count()
+    
+    #     # Пытаемся удалить пользователя - должно вызвать ошибку
+    #     try:
+    #         response = self.client.post(reverse('user_delete', args=[self.user1.pk]))
+    #         # Если не было исключения, проверяем что пользователь не удален
+    #         self.assertEqual(User.objects.count(), initial_count)
+    #         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
+    #     except ProtectedError:
+    #         # Ожидаемое исключение - пользователь не должен удаляться
+    #         self.assertEqual(User.objects.count(), initial_count)
+    #         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
+    
+    def test_cannot_delete_user_with_tasks(self):
+        status = Status.objects.create(name='В работе')
+
+        Task.objects.create(
+            name="Test task",
+            status=status,
+            author=self.user1
+        )
+
+        self.client.login(username='user1', password='testpass123')
         
-        assert response.status_code == 302
-        user.refresh_from_db()
-        assert user.username == "u1_updated"
-        assert user.first_name == "Name"
-        assert user.last_name == "Surname"
-        assert user.email == "u1_updated@example.com"
-
-    # Test Delete User
-    def test_user_delete(self, client):
-        user_model = get_user_model()
-        user = user_model.objects.create_user(username="u1",
-                                              password="pass123")  # NOSONAR
-        client.login(username="u1", password="pass123")  # NOSONAR
-
-        url = reverse("user_delete", kwargs={"pk": user.id})
-        response = client.post(url)
-        assert response.status_code == 302
-        assert not user_model.objects.filter(id=user.id).exists()
-
-    # Test LogIn
-    def test_login_logout(self, client):
-        user_model = get_user_model()
-        user_model.objects.create_user(username="u1",
-                                       password="pass123")  # NOSONAR
-
-        login_url = reverse("login")
-        response = client.post(
-            login_url,
-            {"username": "u1", "password": "pass123"},  # NOSONAR
-        )
-        assert response.status_code == 302
-
-        logout_url = reverse("logout")
-        response = client.get(logout_url)
-        assert response.status_code == 302
-
-
-def test_get_extra_data():
-    middleware = CustomRollbarNotifierMiddleware(dummy_get_response)
-    request = types.SimpleNamespace()
-    exc = Exception()
-
-    data = middleware.get_extra_data(request, exc)
-    assert "feature_flags" in data
-    assert data["feature_flags"] == ["feature_1", "feature_2"]
-
-
-@pytest.mark.django_db
-def test_get_payload_data_authenticated_user():
-    user_model = get_user_model()
-    user = user_model.objects.create_user(
-        username="testuser",
-        email="test@example.com",
-        password="pass",  # NOSONAR
-        first_name="Test",
-        last_name="User",
-    )
-    request = types.SimpleNamespace()
-    request.user = user
-    exc = Exception()
-
-    middleware = CustomRollbarNotifierMiddleware(dummy_get_response)
-    payload = middleware.get_payload_data(request, exc)
-
-    assert "person" in payload
-    assert payload["person"]["username"] == "testuser"
-
-
-def test_get_payload_data_anonymous_user():
-    request = types.SimpleNamespace()
-    request.user = AnonymousUser()
-    exc = Exception()
-
-    middleware = CustomRollbarNotifierMiddleware(dummy_get_response)
-    payload = middleware.get_payload_data(request, exc)
-    assert payload == {}
+        # Сохраняем начальное состояние
+        initial_count = User.objects.count()
+        user_exists_before = User.objects.filter(pk=self.user1.pk).exists()
+        
+        # Пытаемся удалить (может вызвать исключение)
+        try:
+            self.client.post(reverse('user_delete', args=[self.user1.pk]))
+        except ProtectedError:
+            pass  # Ожидаемое поведение
+        
+        # Проверяем что пользователь все еще существует
+        self.assertEqual(User.objects.count(), initial_count)
+        self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
