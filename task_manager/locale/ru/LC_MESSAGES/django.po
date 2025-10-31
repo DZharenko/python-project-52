@@ -275,7 +275,7 @@ msgstr "Обновить метку"
 #: task_manager/templates/users/index.html:12 task_manager/users/forms.py:35
 #: task_manager/users/forms.py:92
 msgid "Username"
-msgstr "Пользователь"
+msgstr "Имя пользователя"
 
 #: task_manager/templates/login.html:16 task_manager/users/forms.py:12
 #: task_manager/users/forms.py:96
