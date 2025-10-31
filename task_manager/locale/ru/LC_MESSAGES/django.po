@@ -72,7 +72,7 @@ msgstr "Метка успешно удалена"
 
 #: task_manager/labels/views.py:50
 msgid "Cannot delete label because it is in use"
-msgstr "Нельзя удалить метку, потому что она используется"
+msgstr "Невозможно удалить метку"
 
 #: task_manager/settings.py:152
 msgid "Russian"
