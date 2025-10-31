@@ -179,7 +179,7 @@ msgstr "Выход"
 #: task_manager/templates/base.html:51 task_manager/templates/login.html:7
 #: task_manager/templates/login.html:19
 msgid "Login"
-msgstr "Вход"
+msgstr "Войти"
 
 #: task_manager/templates/base.html:54
 #: task_manager/templates/users/create.html:7
