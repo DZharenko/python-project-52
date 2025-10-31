@@ -35,18 +35,37 @@ class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_message = _('Label successfully updated')
 
 
+# class LabelDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+#     model = Label
+#     template_name = 'labels/delete.html'
+#     success_url = LABELS_URL
+#     success_message = _('Label successfully deleted')
+
+#     def form_valid(self, form):
+#         try:
+#             return super().form_valid(form)
+#         except models.ProtectedError:
+#             messages.error(
+#                 self.request,
+#                 _('Cannot delete label because it is in use')
+#             )
+#             return redirect(LABELS_URL)
+
 class LabelDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Label
     template_name = 'labels/delete.html'
     success_url = LABELS_URL
     success_message = _('Label successfully deleted')
 
-    def form_valid(self, form):
-        try:
-            return super().form_valid(form)
-        except models.ProtectedError:
+    def post(self, request, *args, **kwargs):
+
+        self.object = self.get_object()
+                
+        if self.object.tasks.exists():
             messages.error(
-                self.request,
+                request,
                 _('Cannot delete label because it is in use')
             )
-            return redirect(LABELS_URL)
+            return redirect(self.success_url)
+        
+        return super().post(request, *args, **kwargs)
