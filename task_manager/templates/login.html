@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container wrapper flex-grow-1">
-    <h1 class="my-4">{% trans "Login" %}</h1>
+    <h1 class="my-4">{% trans "Login button" %}</h1>
     
     <form method="post">
         {% csrf_token %}
@@ -26,7 +26,7 @@
                    placeholder="Пароль"  
                    required>
         </div>
-        <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+        <button type="submit" class="btn btn-primary">{% trans "Login button" %}</button>
     </form>
 </div>
 {% endblock %}

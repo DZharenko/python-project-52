@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:16+0300\n"
+"POT-Creation-Date: 2025-10-31 19:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,10 +176,11 @@ msgstr "Профиль"
 msgid "Logout"
 msgstr "Выход"
 
-#: task_manager/templates/base.html:51 task_manager/templates/login.html:7
-#: task_manager/templates/login.html:19
-msgid "Login"
-msgstr "Войти"
+#: task_manager/templates/base.html:51
+#, fuzzy
+#| msgid "Login"
+msgid "Login link"
+msgstr "Вход"
 
 #: task_manager/templates/base.html:54
 #: task_manager/templates/users/create.html:7
@@ -271,13 +272,17 @@ msgstr "Метки не найдены"
 msgid "Update label"
 msgstr "Обновить метку"
 
+#: task_manager/templates/login.html:7 task_manager/templates/login.html:29
+msgid "Login button"
+msgstr "Войти"
+
 #: task_manager/templates/login.html:12
 #: task_manager/templates/users/index.html:12 task_manager/users/forms.py:35
 #: task_manager/users/forms.py:92
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: task_manager/templates/login.html:16 task_manager/users/forms.py:12
+#: task_manager/templates/login.html:21 task_manager/users/forms.py:12
 #: task_manager/users/forms.py:96
 msgid "Password"
 msgstr "Пароль"
@@ -366,8 +371,6 @@ msgid "Your password must contain at least 3 characters."
 msgstr "Ваш пароль не может содержать менее 3х символов"
 
 #: task_manager/users/forms.py:18
-
-#| msgid "Password"
 msgid "Confirm Password"
 msgstr "Подтвердите пароль"
 
@@ -376,14 +379,10 @@ msgid "Enter the same password again for verification."
 msgstr "Введить пароль еще раз"
 
 #: task_manager/users/forms.py:33
-
-#| msgid "first name"
 msgid "First name"
 msgstr "Имя"
 
 #: task_manager/users/forms.py:34
-
-#| msgid "last name"
 msgid "Last name"
 msgstr "Фамилия"
 
@@ -406,32 +405,22 @@ msgid "Last Name"
 msgstr "Фамилия"
 
 #: task_manager/users/views.py:29
-
-#| msgid "User successfully updated"
 msgid "User created successfully"
 msgstr "Данные успешно обновлены"
 
 #: task_manager/users/views.py:42
-
-#| msgid "User successfully updated"
 msgid "User updated successfully"
 msgstr "Данные успешно обновлены"
 
 #: task_manager/users/views.py:51 task_manager/users/views.py:79
-
-#| msgid "You are logged in"
 msgid "You are not logged in! Please log in."
 msgstr "Вы успешно залогинились"
 
 #: task_manager/users/views.py:56 task_manager/users/views.py:84
-
-#| msgid "You do not have permission to edit this user"
 msgid "You do not have permission to perform this action."
 msgstr "У вас нет прав для редактирования"
 
 #: task_manager/users/views.py:70
-
-#| msgid "User successfully deleted"
 msgid "User deleted successfully"
 msgstr "Пользователь удален"
 

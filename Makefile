@@ -77,3 +77,6 @@ ci-test:
 
 locale:
 	django-admin compilemessages --locale=ru
+
+translate:
+	django-admin makemessages -l ru -i venv
