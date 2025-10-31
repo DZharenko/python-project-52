@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="my-4">{% trans 'Tasks' %}</h1>
 
-<a class="btn btn-primary mb-3" href="{% url 'tasks:task_create' %}">{% trans 'Create task' %}</a>
+<a class="btn btn-primary mb-3" href="{% url 'task_create' %}">{% trans 'Create task' %}</a>
 
 <div class="card mb-4">
     <div class="card-body bg-light">
@@ -67,7 +67,7 @@
             {% for task in tasks %}
             <tr>
                 <td>{{ task.id }}</td>
-                <td><a href="{% url 'tasks:task_detail' task.pk %}">{{ task.name }}</a></td>
+                <td><a href="{% url 'task_detail' task.pk %}">{{ task.name }}</a></td>
                 <td>{{ task.status.name }}</td>
                 <td>{{ task.author.get_full_name }}</td>
                 <td>
@@ -86,8 +86,8 @@
                 </td>
                 <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
                 <td>
-                    <a href="{% url 'tasks:task_update' task.pk %}" class="btn btn-primary btn-sm">{% trans 'Update' %}</a>
-                    <a href="{% url 'tasks:task_delete' task.pk %}" class="btn btn-danger btn-sm">{% trans 'Delete' %}</a>
+                    <a href="{% url 'task_update' task.pk %}" class="btn btn-primary btn-sm">{% trans 'Update' %}</a>
+                    <a href="{% url 'task_delete' task.pk %}" class="btn btn-danger btn-sm">{% trans 'Delete' %}</a>
                 </td>
             </tr>
             {% endfor %}

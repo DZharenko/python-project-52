@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -148,12 +149,12 @@ USE_TZ = True
 
 
 LANGUAGES = [
-    ('ru', 'Russian'),
-    ('en', 'English'),
+    ('ru', _('Russian')),
+    ('en', _('English')),
 ]
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR,'task_manager', 'locale'),
+    os.path.join(BASE_DIR, 'task_manager', 'locale'),
 ]
 
 

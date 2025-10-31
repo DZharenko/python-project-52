@@ -10,7 +10,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
 
-LABELS_URL = reverse_lazy('labels:labels')
+LABELS_URL = reverse_lazy('labels_index')
 
 class LabelListView(LoginRequiredMixin, ListView):
     model = Label

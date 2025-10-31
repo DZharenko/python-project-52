@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="my-4">{% trans 'Labels' %}</h1>
-<a class="btn btn-primary mb-3" href="{% url 'labels:label_create' %}">{% trans 'Create label' %}</a>
+<a class="btn btn-primary mb-3" href="{% url 'label_create' %}">{% trans 'Create label' %}</a>
 
 <table class="table table-striped">
     <thead class="thead-dark">
@@ -22,8 +22,8 @@
             <td>{{ label.name }}</td>
             <td>{{ label.created_at|date:"d.m.Y H:i" }}</td>
             <td>
-                <a href="{% url 'labels:label_update' label.pk %}" class="btn btn-primary btn-sm">{% trans 'Update' %}</a>
-                <a href="{% url 'labels:label_delete' label.pk %}" class="btn btn-danger btn-sm">{% trans 'Delete' %}</a>
+                <a href="{% url 'label_update' label.pk %}" class="btn btn-primary btn-sm">{% trans 'Update' %}</a>
+                <a href="{% url 'label_delete' label.pk %}" class="btn btn-danger btn-sm">{% trans 'Delete' %}</a>
             </td>
         </tr>
         {% empty %}

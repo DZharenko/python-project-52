@@ -22,35 +22,35 @@ class StatusCRUDTest(TestCase):
     def test_status_list_view_authenticated(self):
         """Тест списка статусов для авторизованного пользователя"""
         self.client.force_login(self.user)
-        response = self.client.get(reverse('statuses:statuses'))
+        response = self.client.get(reverse('statuses_index'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses/index.html')
         self.assertContains(response, '<table')
 
     def test_status_list_view_unauthenticated(self):
         """Тест что список статусов недоступен без авторизации"""
-        response = self.client.get(reverse('statuses:statuses'))
+        response = self.client.get(reverse('statuses_index'))
         self.assertNotEqual(response.status_code, 200)
 
     def test_status_create_view_authenticated(self):
         """Тест создания статуса для авторизованного пользователя"""
         self.client.force_login(self.user)
-        response = self.client.get(reverse('statuses:status_create'))
+        response = self.client.get(reverse('status_create'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses/create.html')
 
     def test_status_create_success(self):
         """Тест успешного создания статуса"""
         self.client.force_login(self.user)
-        response = self.client.post(reverse('statuses:status_create'), self.status_data)
-        self.assertRedirects(response, reverse('statuses:statuses'))
+        response = self.client.post(reverse('status_create'), self.status_data)
+        self.assertRedirects(response, reverse('statuses_index'))
         self.assertTrue(Status.objects.filter(name='Test Status').exists())
 
     def test_status_update_view_authenticated(self):
         """Тест обновления статуса для авторизованного пользователя"""
         self.client.force_login(self.user)
         response = self.client.get(
-            reverse('statuses:status_update', args=[self.status.id])
+            reverse('status_update', args=[self.status.id])
             )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses/update.html')
@@ -60,10 +60,10 @@ class StatusCRUDTest(TestCase):
         self.client.force_login(self.user)
         updated_data = {'name': 'Updated Status'}
         response = self.client.post(
-            reverse('statuses:status_update', args=[self.status.id]),
+            reverse('status_update', args=[self.status.id]),
             updated_data
         )
-        self.assertRedirects(response, reverse('statuses:statuses'))
+        self.assertRedirects(response, reverse('statuses_index'))
         self.status.refresh_from_db()
         self.assertEqual(self.status.name, 'Updated Status')
 
@@ -71,7 +71,7 @@ class StatusCRUDTest(TestCase):
         """Тест удаления статуса для авторизованного пользователя"""
         self.client.force_login(self.user)
         response = self.client.get(
-            reverse('statuses:status_delete', args=[self.status.id])
+            reverse('status_delete', args=[self.status.id])
             )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses/delete.html')
@@ -80,8 +80,8 @@ class StatusCRUDTest(TestCase):
         """Тест успешного удаления статуса"""
         self.client.force_login(self.user)
         status_id = self.status.id
-        response = self.client.post(reverse('statuses:status_delete', args=[status_id]))
-        self.assertRedirects(response, reverse('statuses:statuses'))
+        response = self.client.post(reverse('status_delete', args=[status_id]))
+        self.assertRedirects(response, reverse('statuses_index'))
         self.assertFalse(Status.objects.filter(id=status_id).exists())
 
 
@@ -99,10 +99,10 @@ class StatusAccessTest(TestCase):
     def test_protected_pages_require_login(self):
         """Тест что защищенные страницы требуют авторизации"""
         protected_urls = [
-            reverse('statuses:statuses'),
-            reverse('statuses:status_create'),
-            reverse('statuses:status_update', args=[1]),
-            reverse('statuses:status_delete', args=[1]),
+            reverse('statuses_index'),
+            reverse('status_create'),
+            reverse('status_update', args=[1]),
+            reverse('status_delete', args=[1]),
         ]
         
         for url in protected_urls:

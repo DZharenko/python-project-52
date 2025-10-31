@@ -10,7 +10,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
 
-STATUSES_URL = reverse_lazy('statuses:statuses')
+STATUSES_URL = reverse_lazy('statuses_index')
 
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status

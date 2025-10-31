@@ -36,7 +36,7 @@ class TaskCRUDTest(TestCase):
         """Тест создания задачи"""
         self.client.login(username='user1', password='password123')
         response = self.client.post(
-            reverse('tasks:task_create'),
+            reverse('task_create'),
             data=self.task_data
         )
         self.assertEqual(response.status_code, 302)
@@ -49,13 +49,13 @@ class TaskCRUDTest(TestCase):
 
     def test_task_creation_requires_login(self):
         """Тест что создание задачи требует авторизации"""
-        response = self.client.get(reverse('tasks:task_create'))
+        response = self.client.get(reverse('task_create'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
     def test_task_list_requires_login(self):
         """Тест что список задач требует авторизации"""
-        response = self.client.get(reverse('tasks:tasks'))
+        response = self.client.get(reverse('tasks_index'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
@@ -68,7 +68,7 @@ class TaskCRUDTest(TestCase):
             author=self.user1
         )
         response = self.client.get(
-            reverse('tasks:task_detail', kwargs={'pk': task.pk})
+            reverse('task_detail', kwargs={'pk': task.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
@@ -82,7 +82,7 @@ class TaskCRUDTest(TestCase):
             author=self.user1
         )
         response = self.client.get(
-            reverse('tasks:task_update', kwargs={'pk': task.pk})
+            reverse('task_update', kwargs={'pk': task.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
@@ -98,14 +98,14 @@ class TaskCRUDTest(TestCase):
         
         self.client.login(username='user2', password='password123')
         response = self.client.post(
-            reverse('tasks:task_delete', kwargs={'pk': task.pk})
+            reverse('task_delete', kwargs={'pk': task.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Task.objects.filter(pk=task.pk).exists())
         
         self.client.login(username='user1', password='password123')
         response = self.client.post(
-            reverse('tasks:task_delete', kwargs={'pk': task.pk})
+            reverse('task_delete', kwargs={'pk': task.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Task.objects.filter(pk=task.pk).exists())
@@ -144,7 +144,7 @@ class TaskListViewTest(TestCase):
     def test_task_list_view(self):
         """Тест отображения списка задач"""
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('tasks:tasks'))
+        response = self.client.get(reverse('tasks_index'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tasks/index.html')
         self.assertContains(response, 'Test Task')
@@ -172,17 +172,17 @@ class TaskIntegrationTest(TestCase):
         self.client.login(username='testuser', password='testpass123')
         
         response = self.client.post(
-            reverse('tasks:task_create'),
+            reverse('task_create'),
             data=self.task_data
         )
         self.assertEqual(response.status_code, 302)
         task = Task.objects.get(name='Integration Test Task')
         
-        response = self.client.get(reverse('tasks:tasks'))
+        response = self.client.get(reverse('tasks_index'))
         self.assertContains(response, 'Integration Test Task')
         
         response = self.client.get(
-            reverse('tasks:task_detail', kwargs={'pk': task.pk})
+            reverse('task_detail', kwargs={'pk': task.pk})
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Integration Test Task')
@@ -193,7 +193,7 @@ class TaskIntegrationTest(TestCase):
             'status': self.status.id,
         }
         response = self.client.post(
-            reverse('tasks:task_update', kwargs={'pk': task.pk}),
+            reverse('task_update', kwargs={'pk': task.pk}),
             data=update_data
         )
         self.assertEqual(response.status_code, 302)
@@ -201,7 +201,7 @@ class TaskIntegrationTest(TestCase):
         self.assertEqual(task.name, 'Updated Task Name')
         
         response = self.client.post(
-            reverse('tasks:task_delete', kwargs={'pk': task.pk})
+            reverse('task_delete', kwargs={'pk': task.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Task.objects.filter(pk=task.pk).exists())
@@ -260,7 +260,7 @@ class TaskFilterTest(TestCase):
         self.client.login(username='user1', password='password123')
         
         response = self.client.get(
-            reverse('tasks:tasks') + '?status=' + str(self.status_new.id)
+            reverse('tasks_index') + '?status=' + str(self.status_new.id)
             )
         
         self.assertEqual(response.status_code, 200)
@@ -273,7 +273,7 @@ class TaskFilterTest(TestCase):
         self.client.login(username='user1', password='password123')
         
         response = self.client.get(
-            reverse('tasks:tasks') + '?executor=' + str(self.user2.id)
+            reverse('tasks_index') + '?executor=' + str(self.user2.id)
             )
         
         self.assertEqual(response.status_code, 200)
@@ -286,7 +286,7 @@ class TaskFilterTest(TestCase):
         self.client.login(username='user1', password='password123')
         
         response = self.client.get(
-            reverse('tasks:tasks') + '?labels=' + str(self.label_bug.id)
+            reverse('tasks_index') + '?labels=' + str(self.label_bug.id)
             )
         
         self.assertEqual(response.status_code, 200)
@@ -298,7 +298,7 @@ class TaskFilterTest(TestCase):
         """Тест фильтрации только своих задач"""
         self.client.login(username='user1', password='password123')
         
-        response = self.client.get(reverse('tasks:tasks') + '?self_tasks=on')
+        response = self.client.get(reverse('tasks_index') + '?self_tasks=on')
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Task 1')
@@ -310,7 +310,7 @@ class TaskFilterTest(TestCase):
         self.client.login(username='user1', password='password123')
         
         url = (
-            reverse('tasks:tasks') + 
+            reverse('tasks_index') + 
             f'?status={self.status_new.id}&labels={self.label_bug.id}'
         )
         response = self.client.get(url)
@@ -324,7 +324,7 @@ class TaskFilterTest(TestCase):
         """Тест пустых результатов фильтрации"""
         self.client.login(username='user1', password='password123')
         
-        response = self.client.get(reverse('tasks:tasks') + '?status=999')
+        response = self.client.get(reverse('tasks_index') + '?status=999')
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, _('No tasks found'))
@@ -333,7 +333,7 @@ class TaskFilterTest(TestCase):
         """Тест что форма фильтрации отображается"""
         self.client.login(username='user1', password='password123')
         
-        response = self.client.get(reverse('tasks:tasks'))
+        response = self.client.get(reverse('tasks_index'))
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'id_status')

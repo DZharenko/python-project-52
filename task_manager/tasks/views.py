@@ -11,7 +11,7 @@ from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskForm
 from task_manager.tasks.models import Task
 
-TASKS_URL = reverse_lazy('tasks:tasks')
+TASKS_URL = reverse_lazy('tasks_index')
 
 class TaskListView(LoginRequiredMixin, FilterView):  
     model = Task

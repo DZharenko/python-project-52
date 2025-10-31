@@ -23,7 +23,7 @@ class LabelCRUDTest(TestCase):
         """Тест создания метки"""
         self.client.login(username='testuser', password='testpass123')
         response = self.client.post(
-            reverse('labels:label_create'),
+            reverse('label_create'),
             data=self.label_data
         )
         self.assertEqual(response.status_code, 302)
@@ -31,13 +31,13 @@ class LabelCRUDTest(TestCase):
 
     def test_label_creation_requires_login(self):
         """Тест что создание метки требует авторизации"""
-        response = self.client.get(reverse('labels:label_create'))
+        response = self.client.get(reverse('label_create'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
     def test_label_list_requires_login(self):
         """Тест что список меток требует авторизации"""
-        response = self.client.get(reverse('labels:labels'))
+        response = self.client.get(reverse('labels_index'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
 
@@ -45,7 +45,7 @@ class LabelCRUDTest(TestCase):
         """Тест что редактирование метки требует авторизации"""
         label = Label.objects.create(name='Test Label')
         response = self.client.get(
-            reverse('labels:label_update', kwargs={'pk': label.pk})
+            reverse('label_update', kwargs={'pk': label.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
@@ -54,7 +54,7 @@ class LabelCRUDTest(TestCase):
         """Тест что удаление метки требует авторизации"""
         label = Label.objects.create(name='Test Label')
         response = self.client.get(
-            reverse('labels:label_delete', kwargs={'pk': label.pk})
+            reverse('label_delete', kwargs={'pk': label.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/login/'))
@@ -80,17 +80,17 @@ class LabelIntegrationTest(TestCase):
         self.client.login(username='testuser', password='testpass123')
         
         response = self.client.post(
-            reverse('labels:label_create'),
+            reverse('label_create'),
             data={'name': 'Test Label'}
         )
         self.assertEqual(response.status_code, 302)
         label = Label.objects.get(name='Test Label')
         
-        response = self.client.get(reverse('labels:labels'))
+        response = self.client.get(reverse('labels_index'))
         self.assertContains(response, 'Test Label')
         
         response = self.client.post(
-            reverse('labels:label_update', kwargs={'pk': label.pk}),
+            reverse('label_update', kwargs={'pk': label.pk}),
             data={'name': 'Updated Label'}
         )
         self.assertEqual(response.status_code, 302)
@@ -98,7 +98,7 @@ class LabelIntegrationTest(TestCase):
         self.assertEqual(label.name, 'Updated Label')
         
         response = self.client.post(
-            reverse('labels:label_delete', kwargs={'pk': label.pk})
+            reverse('label_delete', kwargs={'pk': label.pk})
         )
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Label.objects.filter(pk=label.pk).exists())

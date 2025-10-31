@@ -31,9 +31,9 @@
 
 
         <div class="mt-3">
-            <a href="{% url 'tasks:task_update' task.pk %}" class="btn btn-primary">{% trans 'Update' %}</a>
-            <a href="{% url 'tasks:task_delete' task.pk %}" class="btn btn-danger">{% trans 'Delete' %}</a>
-            <a href="{% url 'tasks:tasks' %}" class="btn btn-outline-secondary">{% trans 'Back to tasks list' %}</a>
+            <a href="{% url 'task_update' task.pk %}" class="btn btn-primary">{% trans 'Update' %}</a>
+            <a href="{% url 'task_delete' task.pk %}" class="btn btn-danger">{% trans 'Delete' %}</a>
+            <a href="{% url 'tasks_index' %}" class="btn btn-outline-secondary">{% trans 'Back to tasks list' %}</a>
         </div>
     </div>
 </div>
