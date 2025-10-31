@@ -177,7 +177,7 @@ msgid "Logout"
 msgstr "Выход"
 
 #: task_manager/templates/base.html:51
-#, fuzzy
+
 #| msgid "Login"
 msgid "Login link"
 msgstr "Вход"
