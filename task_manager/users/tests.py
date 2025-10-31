@@ -41,7 +41,8 @@ class UserCRUDTests(TestCase):
         self.assertTrue(User.objects.filter(username='newuser').exists())
 
         messages = list(get_messages(response.wsgi_request))
-        assert "пользователь успешно зарегистрирован" in str(messages[0]).lower()
+        assert "пользователь успешно зарегистрирован" in \
+            str(messages[0]).lower()
 
     def test_user_update_authenticated(self):
         self.client.login(username='user1', password='testpass123')  # NOSONAR

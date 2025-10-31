@@ -28,7 +28,9 @@ class LoginView(View):
             messages.success(request, _('You are logged in'))
             return redirect('index')
         else:
-            messages.error(request, _('Please enter a correct username and password.'))
+            messages.error(request, _(
+                'Please enter a correct username and password.'
+                ))
             return render(request, 'login.html')
 
 

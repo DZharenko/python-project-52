@@ -11,6 +11,7 @@ from task_manager.labels.models import Label
 
 LABELS_URL = reverse_lazy('labels_index')
 
+
 class LabelListView(LoginRequiredMixin, ListView):
     model = Label
     template_name = 'labels/index.html'

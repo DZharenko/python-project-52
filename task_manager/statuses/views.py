@@ -12,6 +12,7 @@ from task_manager.statuses.models import Status
 
 STATUSES_URL = reverse_lazy('statuses_index')
 
+
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status
     template_name = 'statuses/index.html'

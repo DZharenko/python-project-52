@@ -13,6 +13,7 @@ from task_manager.tasks.models import Task
 
 TASKS_URL = reverse_lazy('tasks_index')
 
+
 class TaskListView(LoginRequiredMixin, FilterView):  
     model = Task
     template_name = 'tasks/index.html'

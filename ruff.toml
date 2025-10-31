@@ -1,13 +1,10 @@
-line-length = 88
-
-[lint]
-select = [
-    "E",   # pycodestyle errors
-    "F",   # pyflakes  
-    "I",   # isort
-    "C90",
-]
+line-length = 80
+exclude = ["migrations", "settings.py"]
 
 [lint.per-file-ignores]
-"**/migrations/*.py" = ["E501", "I001"]
-"**/settings.py" = ["E501"]
+  # init modules can contain the local imports, logic, unused imports
+"__init__.py" = ["F401"]
+
+[lint]
+preview = true
+select = ["E", "F", "I", "C90"]
