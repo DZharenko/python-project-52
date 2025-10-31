@@ -99,17 +99,17 @@ msgid "Status successfully created"
 msgstr "Статус успешно создан"
 
 #: task_manager/statuses/views.py:35
-#, fuzzy
+
 #| msgid "Status successfully created"
 msgid "Status successfully updated"
-msgstr "Статус успешно создан"
+msgstr "Статус успешно изменен"
 
 #: task_manager/statuses/views.py:42
 msgid "Status successfully deleted"
 msgstr "Статус успешно удален"
 
 #: task_manager/statuses/views.py:51
-#, fuzzy
+
 #| msgid ""
 #| "It is impossible to delete the status                     because it is "
 #| "being used"
@@ -123,17 +123,16 @@ msgid "Executor"
 msgstr "Исполнитель"
 
 #: task_manager/tasks/filters.py:34
-#, fuzzy
+
 #| msgid "Only your own tasks"
 msgid "Only my tasks"
 msgstr "Только свои задачи"
 
 #: task_manager/tasks/forms.py:16 task_manager/tasks/models.py:17
 #: task_manager/templates/tasks/detail.html:12
-#, fuzzy
-#| msgid "Registration"
+
 msgid "Description"
-msgstr "Регистрация"
+msgstr "Описание"
 
 #: task_manager/tasks/forms.py:36 task_manager/templates/tasks/detail.html:17
 #: task_manager/templates/tasks/index.html:77
