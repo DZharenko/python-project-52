@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.i18n import set_language
 
-from task_manager.views import IndexView, LoginView, LogoutView, set_language
+from task_manager.views import IndexView, LoginView, LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -40,7 +40,7 @@ task_manager/
 ├── statuses/      # Task status management
 ├── labels/        # Task labels management
 ├── templates/     # HTML templates
-├── locale/        # i18n translations
+├── locale/        # Django Translation System
 └── settings.py    # Project configuration
 ```
 ---

@@ -65,7 +65,7 @@
                   {% csrf_token %}
                   <input name="next" type="hidden" value="{{ request.get_full_path }}">
                   <input name="language" type="hidden" value="ru">
-                  <button type="submit" class="dropdown-item">Русский (RU)</button>
+                  <button type="submit" class="dropdown-item">{% trans "Russian (RU)" %}</button>
                 </form>
               </li>
               <li>
@@ -73,7 +73,7 @@
                   {% csrf_token %}
                   <input name="next" type="hidden" value="{{ request.get_full_path }}">
                   <input name="language" type="hidden" value="en">
-                  <button type="submit" class="dropdown-item">English (EN)</button>
+                  <button type="submit" class="dropdown-item">{% trans "English (EN)" %}</button>
                 </form>
               </li>
             </ul>
@@ -93,7 +93,7 @@
     </div>
     <footer>
       <div class="container my-5 pt-4 border-top">
-        <a target="_blank" href="https://ru.hexlet.io">Hexlet</a>
+        <a target="_blank" href="https://ru.hexlet.io">{% trans "Hexlet" %}</a>
       </div>
     </footer>
   </body>
