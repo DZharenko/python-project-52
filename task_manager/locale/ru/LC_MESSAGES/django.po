@@ -53,22 +53,22 @@ msgid "Labels"
 msgstr "Метки"
 
 #: task_manager/labels/views.py:27
-#, fuzzy
+
 #| msgid "Task successfully created"
 msgid "Label successfully created"
-msgstr "Задача успешно создана"
+msgstr "Метка успешно создана"
 
 #: task_manager/labels/views.py:35
-#, fuzzy
+
 #| msgid "Task successfully updated"
 msgid "Label successfully updated"
-msgstr "Задача успешно изменена"
+msgstr "Метка успешно изменена"
 
 #: task_manager/labels/views.py:42
-#, fuzzy
+
 #| msgid "Task successfully deleted"
 msgid "Label successfully deleted"
-msgstr "Задача успешно удалена"
+msgstr "Метка успешно удалена"
 
 #: task_manager/labels/views.py:50
 msgid "Cannot delete label because it is in use"
@@ -251,7 +251,7 @@ msgstr "Удаление метки"
 #: task_manager/templates/statuses/delete.html:8
 #: task_manager/templates/tasks/delete.html:7
 #: task_manager/templates/users/delete.html:8
-#, fuzzy
+
 #| msgid "Are you sure you want to delete %(label)s?"
 msgid "Are you sure you want to delete"
 msgstr "Вы уверены, что хотите удалить %(label)s?"
